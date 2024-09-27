@@ -1,0 +1,69 @@
+﻿@page "/main-menu"
+@using MPYT.DB
+@using MPYT.Entities
+@inject ApplicationDbContext DbContext
+
+<MudContainer>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTypography Variant="h4" GutterBottom> Main Menu </MudTypography>
+            <MudText Typo="caption" GutterBottom>@DateTime.Now.ToLongDateString()</MudText>
+        </MudItem>
+        
+        <MudItem xs="12">
+            <MudTabs>
+                <MudTabPanel Text="Noodles">
+                    @foreach (var item in NoodleItems)
+                    {
+                        <MudPaper Class="d-flex align-items-center justify-content-center p-4 m-2" Style="width:150px; height:200px;">
+                            <MudImage Src="@item.ImageUrl" Alt="@item.Name" Width="100" Height="100" />
+                            <MudText Typo="subtitle1">@item.Name</MudText>
+                            <MudText Typo="caption">$@item.Price</MudText>
+                        </MudPaper>
+                    }
+                </MudTabPanel>
+                <MudTabPanel Text="Rice">Rice Items</MudTabPanel>
+                <MudTabPanel Text="Appetizers">Appetizers</MudTabPanel>
+                <MudTabPanel Text="Desserts">Desserts</MudTabPanel>
+                <MudTabPanel Text="Beverages">Beverages</MudTabPanel>
+            </MudTabs>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+@if (NoodleItems == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in NoodleItems)
+        {
+            <li>
+                <img src="@item.ImageUrl" alt="@item.Name" style="width: 100px; height: 100px;" />
+                <div>
+                    <strong>@item.Name</strong> - $@item.Price
+                </div>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    public List<MenuItem> NoodleItems { get; set; } = new List<MenuItem>();
+
+    protected override void OnInitialized()
+    {
+        // Sample data
+        NoodleItems.Add(new MenuItem { Name = "Chicken Noodles", Price = 5.99M, ImageUrl = "/images/chicken_noodles.png" });
+        NoodleItems.Add(new MenuItem { Name = "Beef Noodles", Price = 6.99M, ImageUrl = "/images/beef_noodles.png" });
+        NoodleItems.Add(new MenuItem { Name = "Veg Noodles", Price = 4.99M, ImageUrl = "/images/veg_noodles.png" });
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        NoodleItems = await DbContext.MenuItems.ToListAsync(new CancellationToken);
+    }
+}

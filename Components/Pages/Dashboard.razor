@@ -1,0 +1,91 @@
+﻿@page "/dashboard"
+@using MPYT.DB
+@using MPYT.Entities
+@inject ApplicationDbContext DbContext
+
+<h3>Order Reports</h3>
+<MudContainer>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTypography Variant="h4">Dashboard</MudTypography>
+            <MudText Typo="caption" GutterBottom>@DateTime.Now.ToLongDateString()</MudText>
+        </MudItem>
+        
+        <MudItem xs="4">
+            <MudPaper Class="pa-2" Elevation="2">
+                <MudTypography Variant="h6">$10,482</MudTypography>
+                <MudText Typo="caption">Total Revenue</MudText>
+            </MudPaper>
+        </MudItem>
+        
+        <MudItem xs="4">
+            <MudPaper Class="pa-2" Elevation="2">
+                <MudTypography Variant="h6">23,456</MudTypography>
+                <MudText Typo="caption">Total Orders</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="4">
+            <MudPaper Class="pa-2" Elevation="2">
+                <MudTypography Variant="h6">1,234</MudTypography>
+                <MudText Typo="caption">Total Customers</MudText>
+            </MudPaper>
+        </MudItem>
+        
+        <MudItem xs="12">
+            <MudTable Items="@OrderReports" Striped="true">
+                <HeaderContent>
+                    <MudTh>Customer</MudTh>
+                    <MudTh>Menu</MudTh>
+                    <MudTh>Payment</MudTh>
+                    <MudTh>Status</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.CustomerName</MudTd>
+                    <MudTd>@context.MenuItem</MudTd>
+                    <MudTd>@context.Payment</MudTd>
+                    <MudTd>@context.Status</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+@if (OrderReports == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Menu Item</th>
+                <th>Payment</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var report in OrderReports)
+            {
+                <tr>
+                    <td>@report.CustomerName</td>
+                    <td>@report.MenuItem</td>
+                    <td>@report.Payment</td>
+                    <td>@report.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<OrderReport> OrderReports;
+
+    protected override async Task OnInitializedAsync()
+    {
+        OrderReports = await DbContext.OrderReports.ToListAsync();
+    }
+}

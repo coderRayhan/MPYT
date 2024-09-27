@@ -1,0 +1,19 @@
+﻿<MudDialog>
+    <MudDialogTitle>Add a Product</MudDialogTitle>
+    <MudDialogContent>
+        <MudTextField Label="Product Name" @bind-Value="productName" Required="true" />
+        <MudNumericField Label="Price" @bind-Value="price" />
+        <MudSelect T="string" Label="Category" @bind-Value="category">
+            <MudSelectItem Value="Noodles">Noodles</MudSelectItem>
+            <MudSelectItem Value="Rice">Rice</MudSelectItem>
+            <MudSelectItem Value="Appetizers">Appetizers</MudSelectItem>
+            <MudSelectItem Value="Desserts">Desserts</MudSelectItem>
+            <MudSelectItem Value="Beverages">Beverages</MudSelectItem>
+        </MudSelect>
+        <MudTextField Label="Photo URL" @bind-Value="photoUrl" />
+    </MudDialogContent>
+    <MudDialogActions>
+        <MudButton OnClick="SaveProduct">Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Secondary">Cancel</MudButton>
+    </MudDialogActions>
+</MudDialog>
